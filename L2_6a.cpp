@@ -1,118 +1,77 @@
+//transpose using triplet representation
 #include <iostream>
 using namespace std;
 
+#define MAX 100
+
+struct Sparse
+{
+    int row;
+    int col;
+    int value;
+};
+
 int main()
 {
-    int a[20][3], b[20][3], c[40][3];
+    Sparse a[MAX], transpose[MAX];
+    int rows, cols, n;
 
-    int r1, c1, n1;
-    int r2, c2, n2;
+    cout << "Enter number of rows, columns and non-zero elements: ";
+    cin >> rows >> cols >> n;
 
-    cout << "Enter rows, columns and non-zero elements of first matrix: ";
-    cin >> r1 >> c1 >> n1;
+    a[0].row = rows;
+    a[0].col = cols;
+    a[0].value = n;
 
-    a[0][0] = r1;
-    a[0][1] = c1;
-    a[0][2] = n1;
+    cout << "Enter row, column and value:\n";
 
-    cout << "Enter row, column and value:" << endl;
-
-    for (int i = 1; i <= n1; i++)
+    for (int i = 1; i <= n; i++)
     {
-    cin >> a[i][0] >> a[i][1] >> a[i][2];
+        cin >> a[i].row >> a[i].col >> a[i].value;
     }
 
-    cout << "Enter rows, columns and non-zero elements of second matrix: ";
-    cin >> r2 >> c2 >> n2;
+    // Transpose
+    transpose[0].row = cols;
+    transpose[0].col = rows;
+    transpose[0].value = n;
 
-    b[0][0] = r2;
-    b[0][1] = c2;
-    b[0][2] = n2;
+    int k = 1;
 
-    cout << "Enter row, column and value:" << endl;
-
-    for (int i = 1; i <= n2; i++)
-    { cin >> b[i][0] >> b[i][1] >> b[i][2];
-    }
-
-    if (r1 != r2 || c1 != c2)
-    {    cout << "Addition is not possible.";
-        return 0;
-    }
-
-    int i = 1, j = 1, k = 1;
-  while (i <= n1 && j <= n2)
+    for (int col = 0; col < cols; col++)
     {
-        if (a[i][0] == b[j][0] &&
-            a[i][1] == b[j][1])
+        for (int i = 1; i <= n; i++)
         {
-            int sum = a[i][2] + b[j][2];
-
-            if (sum != 0)
+            if (a[i].col == col)
             {
-                c[k][0] = a[i][0];
-                c[k][1] = a[i][1];
-                c[k][2] = sum;
+                transpose[k].row = a[i].col;
+                transpose[k].col = a[i].row;
+                transpose[k].value = a[i].value;
                 k++;
             }
-
-            i++;
-            j++;
-        }
-        else if (a[i][0] < b[j][0] ||
-                (a[i][0] == b[j][0] &&
-                 a[i][1] < b[j][1]))
-        {
-            c[k][0] = a[i][0];
-            c[k][1] = a[i][1];
-            c[k][2] = a[i][2];
-
-            k++;
-            i++;
-        }
-        else
-        {
-            c[k][0] = b[j][0];
-            c[k][1] = b[j][1];
-            c[k][2] = b[j][2];
-
-            k++;
-            j++;
         }
     }
 
-    while (i <= n1)
-    {
-        c[k][0] = a[i][0];
-        c[k][1] = a[i][1];
-        c[k][2] = a[i][2];
+    cout << "\nOriginal Matrix (Triplet):\n";
+    cout << "Row\tColumn\tValue\n";
 
-        k++;
-        i++;
+    for (int i = 0; i <= n; i++)
+    {
+        cout << a[i].row << "\t"
+             << a[i].col << "\t"
+             << a[i].value << endl;
     }
 
-    while (j <= n2)
+    cout << "\nTranspose Matrix (Triplet):\n";
+    cout << "Row\tColumn\tValue\n";
+
+    for (int i = 0; i <= n; i++)
     {
-        c[k][0] = b[j][0];
-        c[k][1] = b[j][1];
-        c[k][2] = b[j][2];
-
-        k++;
-        j++;
-    }
-
-    c[0][0] = r1;
-    c[0][1] = c1;
-    c[0][2] = k - 1;
-
-    cout << "Addition in Triplet Form:" << endl;
-
-    for (int i = 0; i < k; i++)
-    {
-        cout << c[i][0] << " "
-             << c[i][1] << " "
-             << c[i][2] << endl;
+        cout << transpose[i].row << "\t"
+             << transpose[i].col << "\t"
+             << transpose[i].value << endl;
     }
 
     return 0;
 }
+
+   
